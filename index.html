@@ -46,18 +46,23 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <!-- Grid Tambahan: MID, Departemen, No Reservasi, Tanggal Reservasi -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">MID</label>
+                    <input type="text" id="mid" class="w-full px-3 py-2.5 bg-slate-50/70 border border-slate-200/80 rounded-xl focus:ring-2 focus:ring-pink-400 focus:bg-white outline-none transition text-slate-700 text-sm placeholder-slate-400" placeholder="MID">
+                </div>
                 <div>
                     <label class="block text-xs font-semibold text-slate-600 mb-1">Departemen</label>
-                    <input type="text" id="departemen" class="w-full px-4 py-2.5 bg-slate-50/70 border border-slate-200/80 rounded-xl focus:ring-2 focus:ring-pink-400 focus:bg-white outline-none transition text-slate-700 text-sm placeholder-slate-400" placeholder="Departemen">
+                    <input type="text" id="departemen" class="w-full px-3 py-2.5 bg-slate-50/70 border border-slate-200/80 rounded-xl focus:ring-2 focus:ring-pink-400 focus:bg-white outline-none transition text-slate-700 text-sm placeholder-slate-400" placeholder="Dept">
                 </div>
                 <div>
                     <label class="block text-xs font-semibold text-slate-600 mb-1">No Reservasi</label>
-                    <input type="text" id="noReservasi" class="w-full px-4 py-2.5 bg-slate-50/70 border border-slate-200/80 rounded-xl focus:ring-2 focus:ring-pink-400 focus:bg-white outline-none transition text-slate-700 text-sm placeholder-slate-400" placeholder="No. Dokumen/Ref">
+                    <input type="text" id="noReservasi" class="w-full px-3 py-2.5 bg-slate-50/70 border border-slate-200/80 rounded-xl focus:ring-2 focus:ring-pink-400 focus:bg-white outline-none transition text-slate-700 text-sm placeholder-slate-400" placeholder="No. Ref">
                 </div>
                 <div>
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">Tanggal Reservasi</label>
-                    <input type="date" id="tglReservasi" class="w-full px-4 py-2.5 bg-slate-50/70 border border-slate-200/80 rounded-xl focus:ring-2 focus:ring-pink-400 focus:bg-white outline-none transition text-slate-700 text-sm">
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Tanggal</label>
+                    <input type="date" id="tglReservasi" class="w-full px-2 py-2.5 bg-slate-50/70 border border-slate-200/80 rounded-xl focus:ring-2 focus:ring-pink-400 focus:bg-white outline-none transition text-slate-700 text-xs">
                 </div>
             </div>
 
@@ -91,7 +96,7 @@
 
             <!-- Tombol Submit -->
             <button onclick="submitATK()" id="submitBtn" class="w-full mt-4 bg-pink-500 hover:bg-pink-600 active:scale-[0.98] text-white font-semibold text-sm py-3.5 rounded-2xl shadow-md shadow-pink-500/20 transition-all duration-200">
-                Kirim & Hubungkan ke Email Peminta
+                Kirim Reservasi & Kirim Email Pengingat
             </button>
         </div>
     </div>
@@ -136,24 +141,24 @@
             });
         }
 
-        // Fungsi Submit, Kirim ke Google Sheets (Sheet INPUT), & Buka Email Klien
+        // Fungsi Submit, Kirim ke Google Sheets (Sheet INPUT), & Email Otomatis Server-Side
         function submitATK() {
             const nama = document.getElementById('namaPeminta').value.trim();
             const email = document.getElementById('emailPeminta').value.trim();
+            const mid = document.getElementById('mid').value.trim();
             const departemen = document.getElementById('departemen').value.trim();
             const noReservasi = document.getElementById('noReservasi').value.trim();
             const tglReservasi = document.getElementById('tglReservasi').value;
 
             // Validasi Input Utama
-            if (!nama || !email || !departemen || !noReservasi || !tglReservasi) {
-                alert('Mohon lengkapi seluruh data peminta, departemen, dan nomor reservasi!');
+            if (!nama || !email || !mid || !departemen || !noReservasi || !tglReservasi) {
+                alert('Mohon lengkapi seluruh data (MID, Nama, Email, Departemen, No & Tanggal Reservasi)!');
                 return;
             }
 
             // Kumpulkan data barang dari baris input dinamis
             const rowItems = document.querySelectorAll('#itemContainer .item-row');
             let itemsArray = [];
-            let daftarBarangText = '';
 
             rowItems.forEach((row) => {
                 const namaBarang = row.querySelector('.nama-barang').value.trim();
@@ -164,7 +169,6 @@
                         namaBarang: namaBarang,
                         qty: parseInt(qty) || 1
                     });
-                    daftarBarangText += `${itemsArray.length}. ${namaBarang} - Qty: ${qty}\n`;
                 }
             });
 
@@ -175,19 +179,20 @@
 
             const btn = document.getElementById('submitBtn');
             btn.disabled = true;
-            btn.innerText = 'Menyimpan ke Sheet & Mengirim...';
+            btn.innerText = 'Menyimpan & Mengirim Email...';
 
             // Payload data yang dikirim ke Apps Script
             const payload = {
                 namaPeminta: nama,
                 emailPeminta: email,
+                mid: mid,
                 departemen: departemen,
                 noReservasi: noReservasi,
                 tglReservasi: tglReservasi,
                 items: itemsArray
             };
 
-            // URL Web App Apps Script Anda yang terbaru
+            // URL Web App Apps Script Anda yang aktif
             const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycby5nULLegR6m6fbHFz3sm-mfx2OSo-s1WePKhzcp4bH0bXcOBaUyCTqRfVx0Q1tc-8d/exec';
 
             // Kirim data ke Google Sheets melalui Apps Script
@@ -201,35 +206,39 @@
             .then(response => response.json())
             .then(result => {
                 if (result.status === "success") {
-                    // Format subjek dan isi badan email otomatis
-                    const subject = encodeURIComponent(`Konfirmasi Reservasi ATK - [${noReservasi}]`);
-                    const body = encodeURIComponent(
-                        `Halo ${nama},\n\n` +
-                        `Berikut adalah detail reservasi ATK Anda yang telah dicatat oleh HRD-GA Dept:\n\n` +
-                        `No Reservasi : ${noReservasi}\n` +
-                        `Tanggal      : ${tglReservasi}\n` +
-                        `Nama Peminta : ${nama}\n` +
-                        `Departemen   : ${departemen}\n\n` +
-                        `Daftar Barang:\n${daftarBarangText}\n` +
-                        `------------------------------------\n` +
-                        `Status: Menunggu persetujuan / proses gudang ATK.\n\n` +
-                        `Terima kasih,\nHRD-GA Department`
-                    );
-
-                    // Membuka aplikasi email klien (Outlook/Gmail) terhubung langsung ke email peminta
-                    window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
-                    alert('Data berhasil masuk ke Sheet INPUT & aplikasi email terbuka!');
+                    alert('Reservasi berhasil! Data tercatat ke sheet INPUT dan email pengingat telah otomatis terkirim ke ' + email);
+                    
+                    // Reset form input utama & daftar barang
+                    document.getElementById('namaPeminta').value = '';
+                    document.getElementById('emailPeminta').value = '';
+                    document.getElementById('mid').value = '';
+                    document.getElementById('departemen').value = '';
+                    document.getElementById('noReservasi').value = '';
+                    
+                    // Reset item input ke 2 baris kosong standar
+                    document.getElementById('itemContainer').innerHTML = `
+                        <div class="item-row flex items-center gap-2">
+                            <span class="text-xs font-bold text-slate-400 w-5 text-center">1.</span>
+                            <input type="text" placeholder="Nama Barang ATK" class="nama-barang flex-1 px-3 py-2 bg-slate-50/70 border border-slate-200/80 rounded-xl text-sm focus:ring-2 focus:ring-pink-400 outline-none">
+                            <input type="number" value="1" min="1" placeholder="Qty" class="qty-barang w-20 px-3 py-2 bg-slate-50/70 border border-slate-200/80 rounded-xl text-sm text-center focus:ring-2 focus:ring-pink-400 outline-none">
+                        </div>
+                        <div class="item-row flex items-center gap-2">
+                            <span class="text-xs font-bold text-slate-400 w-5 text-center">2.</span>
+                            <input type="text" placeholder="Nama Barang ATK" class="nama-barang flex-1 px-3 py-2 bg-slate-50/70 border border-slate-200/80 rounded-xl text-sm focus:ring-2 focus:ring-pink-400 outline-none">
+                            <input type="number" value="1" min="1" placeholder="Qty" class="qty-barang w-20 px-3 py-2 bg-slate-50/70 border border-slate-200/80 rounded-xl text-sm text-center focus:ring-2 focus:ring-pink-400 outline-none">
+                        </div>
+                    `;
                 } else {
-                    alert('Gagal menyimpan ke Sheet: ' + result.message);
+                    alert('Gagal menyimpan: ' + result.message);
                 }
 
                 btn.disabled = false;
-                btn.innerText = 'Kirim & Hubungkan ke Email Peminta';
+                btn.innerText = 'Kirim Reservasi & Kirim Email Pengingat';
             })
             .catch((error) => {
                 alert('Terjadi kesalahan koneksi ke server: ' + error);
                 btn.disabled = false;
-                btn.innerText = 'Kirim & Hubungkan ke Email Peminta';
+                btn.innerText = 'Kirim Reservasi & Kirim Email Pengingat';
             });
         }
     </script>
