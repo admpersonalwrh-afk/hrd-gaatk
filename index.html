@@ -136,7 +136,7 @@
             });
         }
 
-        // Fungsi Submit dan Terhubung ke Email Peminta
+        // Fungsi Submit, Kirim ke Google Sheets (Sheet INPUT), & Buka Email Klien
         function submitATK() {
             const nama = document.getElementById('namaPeminta').value.trim();
             const email = document.getElementById('emailPeminta').value.trim();
@@ -150,43 +150,87 @@
                 return;
             }
 
-            // Kumpulkan data barang dari baris input
+            // Kumpulkan data barang dari baris input dinamis
             const rowItems = document.querySelectorAll('#itemContainer .item-row');
+            let itemsArray = [];
             let daftarBarangText = '';
-            let countValidItem = 0;
 
-            rowItems.forEach((row, index) => {
+            rowItems.forEach((row) => {
                 const namaBarang = row.querySelector('.nama-barang').value.trim();
                 const qty = row.querySelector('.qty-barang').value;
 
                 if (namaBarang) {
-                    countValidItem++;
-                    daftarBarangText += `${countValidItem}. ${namaBarang} - Qty: ${qty}\n`;
+                    itemsArray.push({
+                        namaBarang: namaBarang,
+                        qty: parseInt(qty) || 1
+                    });
+                    daftarBarangText += `${itemsArray.length}. ${namaBarang} - Qty: ${qty}\n`;
                 }
             });
 
-            if (countValidItem === 0) {
-                alert('Masukkan minimal 1 nama barang ATK yang ingin direreservasi!');
+            if (itemsArray.length === 0) {
+                alert('Masukkan minimal 1 nama barang ATK yang ingin direservasi!');
                 return;
             }
 
-            // Format subjek dan isi badan email otomatis
-            const subject = encodeURIComponent(`Konfirmasi Reservasi ATK - [${noReservasi}]`);
-            const body = encodeURIComponent(
-                `Halo ${nama},\n\n` +
-                `Berikut adalah detail reservasi ATK Anda yang telah dicatat oleh HRD-GA Dept:\n\n` +
-                `No Reservasi : ${noReservasi}\n` +
-                `Tanggal      : ${tglReservasi}\n` +
-                `Nama Peminta : ${nama}\n` +
-                `Departemen   : ${departemen}\n\n` +
-                `Daftar Barang:\n${daftarBarangText}\n` +
-                `------------------------------------\n` +
-                `Status: Menunggu persetujuan / proses gudang ATK.\n\n` +
-                `Terima kasih,\nHRD-GA Department`
-            );
+            const btn = document.getElementById('submitBtn');
+            btn.disabled = true;
+            btn.innerText = 'Menyimpan ke Sheet & Mengirim...';
 
-            // Membuka aplikasi email klien (Outlook/Gmail) terhubung langsung ke email peminta
-            window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
+            // Payload data yang dikirim ke Apps Script
+            const payload = {
+                namaPeminta: nama,
+                emailPeminta: email,
+                departemen: departemen,
+                noReservasi: noReservasi,
+                tglReservasi: tglReservasi,
+                items: itemsArray
+            };
+
+            // URL Web App Apps Script Anda yang terbaru
+            const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycby5nULLegR6m6fbHFz3sm-mfx2OSo-s1WePKhzcp4bH0bXcOBaUyCTqRfVx0Q1tc-8d/exec';
+
+            // Kirim data ke Google Sheets melalui Apps Script
+            fetch(WEB_APP_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'text/plain;charset=utf-8'
+                },
+                body: JSON.stringify(payload)
+            })
+            .then(response => response.json())
+            .then(result => {
+                if (result.status === "success") {
+                    // Format subjek dan isi badan email otomatis
+                    const subject = encodeURIComponent(`Konfirmasi Reservasi ATK - [${noReservasi}]`);
+                    const body = encodeURIComponent(
+                        `Halo ${nama},\n\n` +
+                        `Berikut adalah detail reservasi ATK Anda yang telah dicatat oleh HRD-GA Dept:\n\n` +
+                        `No Reservasi : ${noReservasi}\n` +
+                        `Tanggal      : ${tglReservasi}\n` +
+                        `Nama Peminta : ${nama}\n` +
+                        `Departemen   : ${departemen}\n\n` +
+                        `Daftar Barang:\n${daftarBarangText}\n` +
+                        `------------------------------------\n` +
+                        `Status: Menunggu persetujuan / proses gudang ATK.\n\n` +
+                        `Terima kasih,\nHRD-GA Department`
+                    );
+
+                    // Membuka aplikasi email klien (Outlook/Gmail) terhubung langsung ke email peminta
+                    window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
+                    alert('Data berhasil masuk ke Sheet INPUT & aplikasi email terbuka!');
+                } else {
+                    alert('Gagal menyimpan ke Sheet: ' + result.message);
+                }
+
+                btn.disabled = false;
+                btn.innerText = 'Kirim & Hubungkan ke Email Peminta';
+            })
+            .catch((error) => {
+                alert('Terjadi kesalahan koneksi ke server: ' + error);
+                btn.disabled = false;
+                btn.innerText = 'Kirim & Hubungkan ke Email Peminta';
+            });
         }
     </script>
 </body>
