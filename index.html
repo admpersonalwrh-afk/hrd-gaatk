@@ -20,7 +20,7 @@
 <body class="bg-gradient-to-br from-pink-50 via-rose-50/50 to-pink-100/60 min-h-screen flex flex-col items-center justify-center p-4">
     
     <!-- Kontainer Utama Form -->
-    <div class="bg-white/90 backdrop-blur-md w-full max-w-lg rounded-3xl shadow-xl p-6 sm:p-8 border border-pink-100 mb-4">
+    <div class="bg-white/90 backdrop-blur-md w-full max-w-xl rounded-3xl shadow-xl p-6 sm:p-8 border border-pink-100 mb-4">
         
         <!-- Bagian Logo & Judul -->
         <div class="text-center mb-6">
@@ -46,32 +46,27 @@
                 </div>
             </div>
 
-            <!-- Grid Tambahan: MID, Departemen, No Reservasi, Tanggal Reservasi -->
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
-                <div>
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">MID</label>
-                    <input type="text" id="mid" class="w-full px-3 py-2.5 bg-slate-50/70 border border-slate-200/80 rounded-xl focus:ring-2 focus:ring-pink-400 focus:bg-white outline-none transition text-slate-700 text-sm placeholder-slate-400" placeholder="MID">
-                </div>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div>
                     <label class="block text-xs font-semibold text-slate-600 mb-1">Departemen</label>
-                    <input type="text" id="departemen" class="w-full px-3 py-2.5 bg-slate-50/70 border border-slate-200/80 rounded-xl focus:ring-2 focus:ring-pink-400 focus:bg-white outline-none transition text-slate-700 text-sm placeholder-slate-400" placeholder="Dept">
+                    <input type="text" id="departemen" class="w-full px-4 py-2.5 bg-slate-50/70 border border-slate-200/80 rounded-xl focus:ring-2 focus:ring-pink-400 focus:bg-white outline-none transition text-slate-700 text-sm placeholder-slate-400" placeholder="Departemen">
                 </div>
                 <div>
                     <label class="block text-xs font-semibold text-slate-600 mb-1">No Reservasi</label>
-                    <input type="text" id="noReservasi" class="w-full px-3 py-2.5 bg-slate-50/70 border border-slate-200/80 rounded-xl focus:ring-2 focus:ring-pink-400 focus:bg-white outline-none transition text-slate-700 text-sm placeholder-slate-400" placeholder="No. Ref">
+                    <input type="text" id="noReservasi" class="w-full px-4 py-2.5 bg-slate-50/70 border border-slate-200/80 rounded-xl focus:ring-2 focus:ring-pink-400 focus:bg-white outline-none transition text-slate-700 text-sm placeholder-slate-400" placeholder="No. Dokumen/Ref">
                 </div>
                 <div>
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">Tanggal</label>
-                    <input type="date" id="tglReservasi" class="w-full px-2 py-2.5 bg-slate-50/70 border border-slate-200/80 rounded-xl focus:ring-2 focus:ring-pink-400 focus:bg-white outline-none transition text-slate-700 text-xs">
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Tanggal Reservasi</label>
+                    <input type="date" id="tglReservasi" class="w-full px-4 py-2.5 bg-slate-50/70 border border-slate-200/80 rounded-xl focus:ring-2 focus:ring-pink-400 focus:bg-white outline-none transition text-slate-700 text-sm">
                 </div>
             </div>
 
             <hr class="border-pink-100 my-2">
 
-            <!-- Daftar Item Barang & Qty -->
+            <!-- Daftar Item Barang (MID di sebelah kiri Nama Barang & Qty di sebelah kanan) -->
             <div>
                 <div class="flex justify-between items-center mb-2">
-                    <label class="text-xs font-semibold text-slate-600 uppercase tracking-wider">Daftar Barang ATK</label>
+                    <label class="text-xs font-semibold text-slate-600 uppercase tracking-wider">Daftar Barang ATK (MID, Nama, Qty)</label>
                     <button type="button" onclick="tambahBaris()" class="text-xs font-semibold text-pink-600 bg-pink-50 hover:bg-pink-100 px-3 py-1.5 rounded-lg border border-pink-200 transition">
                         + Tambah Barang
                     </button>
@@ -82,12 +77,14 @@
                     <!-- Baris Item 1 -->
                     <div class="item-row flex items-center gap-2">
                         <span class="text-xs font-bold text-slate-400 w-5 text-center">1.</span>
+                        <input type="text" placeholder="MID" class="mid-barang w-28 px-3 py-2 bg-slate-50/70 border border-slate-200/80 rounded-xl text-sm focus:ring-2 focus:ring-pink-400 outline-none">
                         <input type="text" placeholder="Nama Barang ATK" class="nama-barang flex-1 px-3 py-2 bg-slate-50/70 border border-slate-200/80 rounded-xl text-sm focus:ring-2 focus:ring-pink-400 outline-none">
                         <input type="number" value="1" min="1" placeholder="Qty" class="qty-barang w-20 px-3 py-2 bg-slate-50/70 border border-slate-200/80 rounded-xl text-sm text-center focus:ring-2 focus:ring-pink-400 outline-none">
                     </div>
                     <!-- Baris Item 2 -->
                     <div class="item-row flex items-center gap-2">
                         <span class="text-xs font-bold text-slate-400 w-5 text-center">2.</span>
+                        <input type="text" placeholder="MID" class="mid-barang w-28 px-3 py-2 bg-slate-50/70 border border-slate-200/80 rounded-xl text-sm focus:ring-2 focus:ring-pink-400 outline-none">
                         <input type="text" placeholder="Nama Barang ATK" class="nama-barang flex-1 px-3 py-2 bg-slate-50/70 border border-slate-200/80 rounded-xl text-sm focus:ring-2 focus:ring-pink-400 outline-none">
                         <input type="number" value="1" min="1" placeholder="Qty" class="qty-barang w-20 px-3 py-2 bg-slate-50/70 border border-slate-200/80 rounded-xl text-sm text-center focus:ring-2 focus:ring-pink-400 outline-none">
                     </div>
@@ -110,7 +107,7 @@
         // Set tanggal hari ini secara otomatis pada saat halaman dimuat
         document.getElementById('tglReservasi').valueAsDate = new Date();
 
-        // Fungsi untuk menambah baris input barang baru secara dinamis
+        // Fungsi untuk menambah baris input barang baru secara dinamis (MID di kiri, Nama di tengah, Qty di kanan)
         function tambahBaris() {
             const container = document.getElementById('itemContainer');
             const rowCount = container.getElementsByClassName('item-row').length + 1;
@@ -119,6 +116,7 @@
             newRow.className = 'item-row flex items-center gap-2';
             newRow.innerHTML = `
                 <span class="text-xs font-bold text-slate-400 w-5 text-center">${rowCount}.</span>
+                <input type="text" placeholder="MID" class="mid-barang w-28 px-3 py-2 bg-slate-50/70 border border-slate-200/80 rounded-xl text-sm focus:ring-2 focus:ring-pink-400 outline-none">
                 <input type="text" placeholder="Nama Barang ATK" class="nama-barang flex-1 px-3 py-2 bg-slate-50/70 border border-slate-200/80 rounded-xl text-sm focus:ring-2 focus:ring-pink-400 outline-none">
                 <input type="number" value="1" min="1" placeholder="Qty" class="qty-barang w-20 px-3 py-2 bg-slate-50/70 border border-slate-200/80 rounded-xl text-sm text-center focus:ring-2 focus:ring-pink-400 outline-none">
                 <button type="button" onclick="hapusBaris(this)" class="text-rose-400 hover:text-rose-600 p-1 text-xs font-bold">✕</button>
@@ -141,34 +139,37 @@
             });
         }
 
-        // Fungsi Submit, Kirim ke Google Sheets (Sheet INPUT), & Email Otomatis Server-Side
+        // Fungsi Submit, Kirim ke Google Sheets, & Email Otomatis
         function submitATK() {
             const nama = document.getElementById('namaPeminta').value.trim();
             const email = document.getElementById('emailPeminta').value.trim();
-            const mid = document.getElementById('mid').value.trim();
             const departemen = document.getElementById('departemen').value.trim();
             const noReservasi = document.getElementById('noReservasi').value.trim();
             const tglReservasi = document.getElementById('tglReservasi').value;
 
             // Validasi Input Utama
-            if (!nama || !email || !mid || !departemen || !noReservasi || !tglReservasi) {
-                alert('Mohon lengkapi seluruh data (MID, Nama, Email, Departemen, No & Tanggal Reservasi)!');
+            if (!nama || !email || !departemen || !noReservasi || !tglReservasi) {
+                alert('Mohon lengkapi seluruh data peminta, departemen, dan nomor reservasi!');
                 return;
             }
 
-            // Kumpulkan data barang dari baris input dinamis
+            // Kumpulkan data barang dari baris input dinamis (MID & Nama Barang per baris)
             const rowItems = document.querySelectorAll('#itemContainer .item-row');
             let itemsArray = [];
+            let daftarBarangText = '';
 
             rowItems.forEach((row) => {
+                const midBarang = row.querySelector('.mid-barang').value.trim();
                 const namaBarang = row.querySelector('.nama-barang').value.trim();
                 const qty = row.querySelector('.qty-barang').value;
 
                 if (namaBarang) {
                     itemsArray.push({
+                        mid: midBarang,
                         namaBarang: namaBarang,
                         qty: parseInt(qty) || 1
                     });
+                    daftarBarangText += `${itemsArray.length}. [MID: ${midBarang || '-'}] ${namaBarang} - Qty: ${qty}\n`;
                 }
             });
 
@@ -185,7 +186,6 @@
             const payload = {
                 namaPeminta: nama,
                 emailPeminta: email,
-                mid: mid,
                 departemen: departemen,
                 noReservasi: noReservasi,
                 tglReservasi: tglReservasi,
@@ -208,10 +208,9 @@
                 if (result.status === "success") {
                     alert('Reservasi berhasil! Data tercatat ke sheet INPUT dan email pengingat telah otomatis terkirim ke ' + email);
                     
-                    // Reset form input utama & daftar barang
+                    // Reset form utama
                     document.getElementById('namaPeminta').value = '';
                     document.getElementById('emailPeminta').value = '';
-                    document.getElementById('mid').value = '';
                     document.getElementById('departemen').value = '';
                     document.getElementById('noReservasi').value = '';
                     
@@ -219,11 +218,13 @@
                     document.getElementById('itemContainer').innerHTML = `
                         <div class="item-row flex items-center gap-2">
                             <span class="text-xs font-bold text-slate-400 w-5 text-center">1.</span>
+                            <input type="text" placeholder="MID" class="mid-barang w-28 px-3 py-2 bg-slate-50/70 border border-slate-200/80 rounded-xl text-sm focus:ring-2 focus:ring-pink-400 outline-none">
                             <input type="text" placeholder="Nama Barang ATK" class="nama-barang flex-1 px-3 py-2 bg-slate-50/70 border border-slate-200/80 rounded-xl text-sm focus:ring-2 focus:ring-pink-400 outline-none">
                             <input type="number" value="1" min="1" placeholder="Qty" class="qty-barang w-20 px-3 py-2 bg-slate-50/70 border border-slate-200/80 rounded-xl text-sm text-center focus:ring-2 focus:ring-pink-400 outline-none">
                         </div>
                         <div class="item-row flex items-center gap-2">
                             <span class="text-xs font-bold text-slate-400 w-5 text-center">2.</span>
+                            <input type="text" placeholder="MID" class="mid-barang w-28 px-3 py-2 bg-slate-50/70 border border-slate-200/80 rounded-xl text-sm focus:ring-2 focus:ring-pink-400 outline-none">
                             <input type="text" placeholder="Nama Barang ATK" class="nama-barang flex-1 px-3 py-2 bg-slate-50/70 border border-slate-200/80 rounded-xl text-sm focus:ring-2 focus:ring-pink-400 outline-none">
                             <input type="number" value="1" min="1" placeholder="Qty" class="qty-barang w-20 px-3 py-2 bg-slate-50/70 border border-slate-200/80 rounded-xl text-sm text-center focus:ring-2 focus:ring-pink-400 outline-none">
                         </div>
