@@ -61,7 +61,7 @@
 
             <div>
                 <div class="flex justify-between items-center mb-2">
-                    <label class="text-xs font-semibold text-slate-600 uppercase tracking-wider">Daftar Barang ATK (MID, Nama, Qty)</label>
+                    <label class="text-xs font-semibold text-slate-600 uppercase tracking-wider">Daftar Barang ATK (MID, Nama, UOM, Qty)</label>
                     <button type="button" onclick="tambahBaris()" class="text-xs font-semibold text-pink-600 bg-pink-50 hover:bg-pink-100 px-3 py-1.5 rounded-lg border border-pink-200 transition">
                         + Tambah Barang
                     </button>
@@ -70,15 +70,17 @@
                 <div id="itemContainer" class="space-y-2.5 max-h-56 overflow-y-auto pr-1">
                     <div class="item-row flex items-center gap-2">
                         <span class="text-xs font-bold text-slate-400 w-5 text-center">1.</span>
-                        <input type="text" placeholder="MID" class="mid-barang w-28 px-3 py-2 bg-slate-50/70 border border-slate-200/80 rounded-xl text-sm focus:ring-2 focus:ring-pink-400 outline-none" oninput="cariNamaBarang(this)">
+                        <input type="text" placeholder="MID" class="mid-barang w-24 px-3 py-2 bg-slate-50/70 border border-slate-200/80 rounded-xl text-sm focus:ring-2 focus:ring-pink-400 outline-none" oninput="cariNamaBarang(this)">
                         <input type="text" placeholder="Nama Barang ATK" class="nama-barang flex-1 px-3 py-2 bg-slate-50/70 border border-slate-200/80 rounded-xl text-sm focus:ring-2 focus:ring-pink-400 outline-none">
-                        <input type="number" value="1" min="1" placeholder="Qty" class="qty-barang w-20 px-3 py-2 bg-slate-50/70 border border-slate-200/80 rounded-xl text-sm text-center focus:ring-2 focus:ring-pink-400 outline-none">
+                        <input type="text" placeholder="UOM" class="uom-barang w-16 px-2 py-2 bg-slate-50/70 border border-slate-200/80 rounded-xl text-sm text-center focus:ring-2 focus:ring-pink-400 outline-none">
+                        <input type="number" value="1" min="1" placeholder="Qty" class="qty-barang w-16 px-2 py-2 bg-slate-50/70 border border-slate-200/80 rounded-xl text-sm text-center focus:ring-2 focus:ring-pink-400 outline-none">
                     </div>
                     <div class="item-row flex items-center gap-2">
                         <span class="text-xs font-bold text-slate-400 w-5 text-center">2.</span>
-                        <input type="text" placeholder="MID" class="mid-barang w-28 px-3 py-2 bg-slate-50/70 border border-slate-200/80 rounded-xl text-sm focus:ring-2 focus:ring-pink-400 outline-none" oninput="cariNamaBarang(this)">
+                        <input type="text" placeholder="MID" class="mid-barang w-24 px-3 py-2 bg-slate-50/70 border border-slate-200/80 rounded-xl text-sm focus:ring-2 focus:ring-pink-400 outline-none" oninput="cariNamaBarang(this)">
                         <input type="text" placeholder="Nama Barang ATK" class="nama-barang flex-1 px-3 py-2 bg-slate-50/70 border border-slate-200/80 rounded-xl text-sm focus:ring-2 focus:ring-pink-400 outline-none">
-                        <input type="number" value="1" min="1" placeholder="Qty" class="qty-barang w-20 px-3 py-2 bg-slate-50/70 border border-slate-200/80 rounded-xl text-sm text-center focus:ring-2 focus:ring-pink-400 outline-none">
+                        <input type="text" placeholder="UOM" class="uom-barang w-16 px-2 py-2 bg-slate-50/70 border border-slate-200/80 rounded-xl text-sm text-center focus:ring-2 focus:ring-pink-400 outline-none">
+                        <input type="number" value="1" min="1" placeholder="Qty" class="qty-barang w-16 px-2 py-2 bg-slate-50/70 border border-slate-200/80 rounded-xl text-sm text-center focus:ring-2 focus:ring-pink-400 outline-none">
                     </div>
                 </div>
             </div>
@@ -134,7 +136,7 @@
     </footer>
 
     <script>
-        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbz1-6aAS4er79uTr-Rgi56XbkkIKb6miprQrhvEPFCuBmbHCETHHscvSkT4l2lDtQqf/exec";
+        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwLOY5w0BMuaFyTgbiyLFeZ6YeA1NwHdzXSckEiEhFsv6JTqGWB6aDdY1N26sKFSU5U/exec";
         let masterMIDData = {};
 
         window.onload = function() {
@@ -170,9 +172,10 @@
             newRow.className = 'item-row flex items-center gap-2';
             newRow.innerHTML = `
                 <span class="text-xs font-bold text-slate-400 w-5 text-center">${rowCount}.</span>
-                <input type="text" placeholder="MID" class="mid-barang w-28 px-3 py-2 bg-slate-50/70 border border-slate-200/80 rounded-xl text-sm focus:ring-2 focus:ring-pink-400 outline-none" oninput="cariNamaBarang(this)">
+                <input type="text" placeholder="MID" class="mid-barang w-24 px-3 py-2 bg-slate-50/70 border border-slate-200/80 rounded-xl text-sm focus:ring-2 focus:ring-pink-400 outline-none" oninput="cariNamaBarang(this)">
                 <input type="text" placeholder="Nama Barang ATK" class="nama-barang flex-1 px-3 py-2 bg-slate-50/70 border border-slate-200/80 rounded-xl text-sm focus:ring-2 focus:ring-pink-400 outline-none">
-                <input type="number" value="1" min="1" placeholder="Qty" class="qty-barang w-20 px-3 py-2 bg-slate-50/70 border border-slate-200/80 rounded-xl text-sm text-center focus:ring-2 focus:ring-pink-400 outline-none">
+                <input type="text" placeholder="UOM" class="uom-barang w-16 px-2 py-2 bg-slate-50/70 border border-slate-200/80 rounded-xl text-sm text-center focus:ring-2 focus:ring-pink-400 outline-none">
+                <input type="number" value="1" min="1" placeholder="Qty" class="qty-barang w-16 px-2 py-2 bg-slate-50/70 border border-slate-200/80 rounded-xl text-sm text-center focus:ring-2 focus:ring-pink-400 outline-none">
                 <button type="button" onclick="hapusBaris(this)" class="text-rose-400 hover:text-rose-600 p-1 text-xs font-bold">✕</button>
             `;
             container.appendChild(newRow);
@@ -209,12 +212,14 @@
             rowItems.forEach((row) => {
                 const midBarang = row.querySelector('.mid-barang').value.trim();
                 const namaBarang = row.querySelector('.nama-barang').value.trim();
+                const uomBarang = row.querySelector('.uom-barang').value.trim();
                 const qty = row.querySelector('.qty-barang').value;
 
                 if (namaBarang || midBarang) {
                     itemsArray.push({
                         mid: midBarang || '-',
                         namaBarang: namaBarang || "Barang Manual",
+                        uom: uomBarang || '-',
                         qty: parseInt(qty) || 1
                     });
                 }
@@ -266,7 +271,7 @@
                                     <p class="text-xs text-slate-400">MID: ${item.mid}</p>
                                 </div>
                                 <span class="bg-pink-50 text-pink-600 font-bold text-xs px-2.5 py-1 rounded-lg border border-pink-100">
-                                    Qty: ${item.qty}
+                                    ${item.qty} ${item.uom !== '-' ? item.uom : ''}
                                 </span>
                             </div>
                         `;
