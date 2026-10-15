@@ -28,6 +28,7 @@
             <p class="text-xs font-medium text-pink-500 tracking-wider uppercase mt-1">HRD-GA Department</p>
         </div>
 
+        <!-- FORM UTAMA -->
         <div id="atkForm" class="space-y-4">
             
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -86,6 +87,46 @@
                 Kirim Reservasi
             </button>
         </div>
+
+        <!-- HALAMAN RINCIAN / SUKSES (AWALNYA DISEMBUNYIKAN) -->
+        <div id="successSummary" class="hidden space-y-4">
+            <div class="text-center bg-emerald-50 border border-emerald-200 text-emerald-800 p-4 rounded-2xl">
+                <div class="text-2xl mb-1">🎉</div>
+                <h2 class="font-bold text-base">Reservasi Berhasil Dikirim!</h2>
+                <p class="text-xs text-emerald-600 mt-0.5">Data Anda telah tercatat ke sheet INPUT.</p>
+            </div>
+
+            <div class="bg-slate-50/80 border border-slate-200/80 rounded-2xl p-4 text-sm space-y-2 text-slate-700">
+                <div class="flex justify-between border-b border-slate-200 pb-2">
+                    <span class="text-slate-500 font-medium">No. Reservasi</span>
+                    <span id="sumNoReservasi" class="font-bold text-slate-800"></span>
+                </div>
+                <div class="flex justify-between border-b border-slate-200 pb-2">
+                    <span class="text-slate-500 font-medium">Nama Peminta</span>
+                    <span id="sumNama" class="font-semibold"></span>
+                </div>
+                <div class="flex justify-between border-b border-slate-200 pb-2">
+                    <span class="text-slate-500 font-medium">Departemen / Email</span>
+                    <span id="sumDeptEmail" class="text-right"></span>
+                </div>
+                <div class="flex justify-between pb-1">
+                    <span class="text-slate-500 font-medium">Tanggal Reservasi</span>
+                    <span id="sumTgl" class="font-semibold"></span>
+                </div>
+            </div>
+
+            <div>
+                <h3 class="text-xs font-semibold text-slate-600 uppercase tracking-wider mb-2">Rincian Barang ATK yang Direservasi</h3>
+                <div id="sumItemsContainer" class="border border-slate-200/80 rounded-2xl overflow-hidden text-sm divide-y divide-slate-100 max-h-48 overflow-y-auto">
+                    <!-- Item rincian dinamis masuk lewat JS -->
+                </div>
+            </div>
+
+            <button onclick="location.reload()" class="w-full mt-2 bg-slate-800 hover:bg-slate-900 active:scale-[0.98] text-white font-semibold text-sm py-3.5 rounded-2xl shadow-md transition-all duration-200">
+                Buat Reservasi Baru
+            </button>
+        </div>
+
     </div>
 
     <footer class="text-center text-xs text-slate-500 font-medium">
@@ -93,10 +134,9 @@
     </footer>
 
     <script>
-        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbw-w-HYuLvo2HoyWb8NdWIlnupNyhnCDGdYfPAYlMmf_OX9aoAPvaIgoNe8iKnNZf6N/exec';
+        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwHS8f1QFSO2ADY8n-Pbk71fVs2Wv1PtEBOsLPyFavho7CkWyba-Iov_8QnRq1HDQ/exec';
         let masterMIDData = {};
 
-        // Ambil data Master MID saat halaman pertama kali dimuat
         window.onload = function() {
             document.getElementById('tglReservasi').valueAsDate = new Date();
 
@@ -110,7 +150,6 @@
                 .catch(err => console.log('Gagal memuat Master MID:', err));
         };
 
-        // Fungsi otomatis mencari dan mengisi nama barang berdasarkan ketikan MID
         function cariNamaBarang(inputElement) {
             const midValue = inputElement.value.trim();
             const row = inputElement.closest('.item-row');
@@ -174,7 +213,7 @@
 
                 if (namaBarang || midBarang) {
                     itemsArray.push({
-                        mid: midBarang,
+                        mid: midBarang || '-',
                         namaBarang: namaBarang || "Barang Manual",
                         qty: parseInt(qty) || 1
                     });
@@ -209,8 +248,33 @@
             .then(response => response.json())
             .then(result => {
                 if (result.status === "success") {
-                    alert('Reservasi berhasil! Data tercatat ke sheet INPUT.');
-                    location.reload();
+                    // Sembunyikan Form Utama
+                    document.getElementById('atkForm').classList.add('hidden');
+                    
+                    // Render Data Ringkasan ke UI
+                    document.getElementById('sumNoReservasi').innerText = noReservasi;
+                    document.getElementById('sumNama').innerText = nama;
+                    document.getElementById('sumDeptEmail').innerText = `${departemen} (${email})`;
+                    document.getElementById('sumTgl').innerText = tglReservasi;
+
+                    let itemsHtml = '';
+                    itemsArray.forEach((item, index) => {
+                        itemsHtml += `
+                            <div class="flex justify-between items-center p-3 bg-white">
+                                <div>
+                                    <p class="font-medium text-slate-800">${index + 1}. ${item.namaBarang}</p>
+                                    <p class="text-xs text-slate-400">MID: ${item.mid}</p>
+                                </div>
+                                <span class="bg-pink-50 text-pink-600 font-bold text-xs px-2.5 py-1 rounded-lg border border-pink-100">
+                                    Qty: ${item.qty}
+                                </span>
+                            </div>
+                        `;
+                    });
+                    document.getElementById('sumItemsContainer').innerHTML = itemsHtml;
+
+                    // Tampilkan Rincian Sukses
+                    document.getElementById('successSummary').classList.remove('hidden');
                 } else {
                     alert('Gagal menyimpan: ' + result.message);
                     btn.disabled = false;
